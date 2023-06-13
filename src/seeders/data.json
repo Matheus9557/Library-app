@@ -1,0 +1,34 @@
+{
+    "Users": [
+        {
+            "id": 1,
+            "registration": "ABC123",
+            "category": "Estudante",
+            "name": "Joao",
+            "phone": "1234567890",
+            "email": "joao@example.com",
+            "password": "password",
+            "hasPenalty": 0
+          }
+          
+    ],
+    "Books": [
+      {
+        "id": 1,
+        "isbn": "978-6555113631",
+        "image": "/imgs/hamburguer.jpg",
+        "title": "Senhor dos Anéis",
+        "author": "J.R.R Tolkien",
+        "year": 2022
+      }
+    ],
+    "Loans": [
+      {
+        "id": 1,
+        "loanDate": "2023-06-01",
+        "returnDate": "2023-06-08",
+        "userId": 2,
+        "bookId": 3
+      }
+    ]
+  }
