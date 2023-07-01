@@ -1,10 +1,18 @@
 const path = require('path');
-const Database = require('sqlite-async');
+const sqlite3 = require('sqlite3').verbose();
 
 const dbFile = path.resolve(__dirname, 'database.sqlite');
 
-async function conn() {
-  return await Database.open(dbFile);
+function conn() {
+  return new Promise((resolve, reject) => {
+    const db = new sqlite3.Database(dbFile, (err) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(db);
+      }
+    });
+  });
 }
 
 module.exports = { conn, dbFile };

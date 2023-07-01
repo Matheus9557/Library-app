@@ -4,10 +4,11 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const flash = require('connect-flash');
 const session = require('express-session');
-const routes = require('./routes');
+const routes = require('./routes/routes');
 const { conn } = require('./db');
 
-dotenv.config();
+dotenv.config({ path: path.resolve(__dirname, '../.env') });
+
 
 const app = express();
 
@@ -25,12 +26,10 @@ app.use(
 
 app.use('/', routes);
 
-
 app.use((err, req, res, next) => {
   console.error(err);
   res.status(500).json({ error: 'Internal Server Error' });
 });
-
 
 const startServer = async () => {
   try {

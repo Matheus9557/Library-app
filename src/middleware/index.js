@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const { randomBytes } = require('node:crypto');
+const { randomBytes } = require('crypto');
 
 const initLocals = (req, res, next) => {
   res.locals.user = req.session.user;
