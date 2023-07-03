@@ -4,7 +4,7 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const flash = require('connect-flash');
 const session = require('express-session');
-const routes = require('./routes/routes');
+const routes = require('./routes');
 const { conn } = require('./db');
 
 dotenv.config({ path: path.resolve(__dirname, '../.env') });
