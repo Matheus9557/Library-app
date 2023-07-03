@@ -8,6 +8,7 @@ const BookAPIController = require('../controllers/booksAPIController');
 const BookController = require('../controllers/booksController');
 const LoanController = require('../controllers/loanController');
 
+router.get('/', (req, res) => res.redirect('/books/index'));
 
 router.post('/signup', UserAPIController.store);
 router.post('/signin', UserAPIController.authenticate);
