@@ -48,6 +48,6 @@ router.put('/api/v1/loans/:id', middleware.isAPIAuthenticated, LoanController.up
 router.delete('/api/v1/loans/:id', middleware.isAPIAuthenticated, LoanController.deleteLoan);
 
 // Rota raiz redireciona para /foods/index
-router.get('/', (req, res) => res.redirect('/foods/index'));
+router.get('/', (req, res) => res.redirect('/books/index'));
 
 module.exports = router;
