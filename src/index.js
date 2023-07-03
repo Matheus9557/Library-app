@@ -1,14 +1,20 @@
+const fs = require('fs');
 const express = require('express');
-const dotenv = require('dotenv');
-const path = require('path');
-const cookieParser = require('cookie-parser');
-const flash = require('connect-flash');
+
 const session = require('express-session');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
+
+const nunjucks = require('nunjucks');
+const flash = require('connect-flash');
+const dotenv = require('dotenv').config();
+const SQLiteStore = require('connect-sqlite3')(session);
+const { isCelebrateError } = require('celebrate');
+
 const routes = require('./routes');
-const { conn } = require('./db');
-
-dotenv.config({ path: path.resolve(__dirname, '../.env') });
-
+const Seed = require('./seeders');
+const Migration = require('./migrations');
+const { dbFile } = require('./db');
 
 const app = express();
 
@@ -24,23 +30,47 @@ app.use(
   })
 );
 
-app.use('/', routes);
 
-app.use((err, req, res, next) => {
-  console.error(err);
-  res.status(500).json({ error: 'Internal Server Error' });
+app.set('view engine', 'njk');
+
+nunjucks.configure('src/views', {
+  express: app,
+  autoescape: true,
+  noCache: true,
 });
 
-const startServer = async () => {
-  try {
-    await conn();
-    const PORT = process.env.PORT || 3000;
-    app.listen(PORT, () => {
-      console.log(`Server is running on port ${PORT}`);
-    });
-  } catch (err) {
-    console.error('Failed to connect to the database:', err);
+(async () => {
+  if (!fs.existsSync(dbFile)) {
+    await Migration.up();
+    await Seed.up();
   }
-};
+})();
 
-startServer();
+app.use(routes);
+
+app.use((req, res, next) => {
+  res.status(404).send('Content not found');
+});
+
+app.use((err, req, res, next) => {
+  console.log(err);
+
+  if (isCelebrateError(err)) {
+    const message = err.message + ': ' + Object.fromEntries(err.details).body.details[0].message;
+    if (!req.originalUrl.includes('api')) {
+      // joi error comes from the web app, so redirect with a flash
+      req.flash('error', message);
+      return res.redirect(req.originalUrl);
+    }
+
+    // joi error comes from an API request, so send an error response
+    return res.status(400).json({ error: message });
+  } else {
+    res.status(500).send('Internal server error');
+  }
+});
+
+const port = process.env.PORT || 3000;
+app.listen(port, () => {
+  console.log('Food App is running!');
+});
