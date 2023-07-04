@@ -24,7 +24,7 @@ app.use(cookieParser());
 app.use(flash());
 app.use(
   session({
-    secret: process.env.SESSION_SECRET,
+    secret: 'hjgutrOIYUIKJHFytgf43776GUuyguy7@#$&¨Gyg@#gf',
     resave: true,
     saveUninitialized: true,
   })
