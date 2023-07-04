@@ -1,0 +1,48 @@
+{% extends "layout.njk" %}
+
+{% set title = "Lista de Empréstimos" %}
+
+{% block content %}
+<h1 class="mt-5 text-center">
+  {{ title }}
+</h1>
+
+<div class="text-right">
+  <a href="/loans/create" class="btn btn-secondary rounded-circle mr-4 font-weight-bold"
+     title="Criar Empréstimo">
+    +
+  </a>
+</div>
+
+<table class="table mt-5">
+  <thead>
+    <tr>
+      <th scope="col">ID</th>
+      <th scope="col">Usuário</th>
+      <th scope="col">Livro</th>
+      <th scope="col">Data do Empréstimo</th>
+      <th scope="col">Data de Devolução</th>
+      <th scope="col">Ações</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for loan in loans %}
+      <tr>
+        <th scope="row">{{ loan.id }}</th>
+        <td>{{ loan.user.name }}</td>
+        <td>{{ loan.book.title }}</td>
+        <td>{{ loan.loanDate }}</td>
+        <td>{{ loan.returnDate }}</td>
+        <td>
+          <a href="/loans/edit/{{ loan.id }}" title="Editar Empréstimo">
+            <i class="fas fa-pencil-alt"></i>
+          </a>
+          <a href="/loans/delete/{{ loan.id }}" title="Excluir Empréstimo">
+            <i class="fas fa-trash-alt"></i>
+          </a>
+        </td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

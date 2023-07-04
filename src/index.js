@@ -24,9 +24,12 @@ app.use(cookieParser());
 app.use(flash());
 app.use(
   session({
+    store: new SQLiteStore(),
     secret: 'hjgutrOIYUIKJHFytgf43776GUuyguy7@#$&¨Gyg@#gf',
+    name: 'sessionId',
     resave: true,
     saveUninitialized: true,
+    cookie: { maxAge: 7 * 24 * 60 * 60 * 1000 },
   })
 );
 
@@ -72,5 +75,5 @@ app.use((err, req, res, next) => {
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
-  console.log('Food App is running!');
+  console.log('Library App is running!');
 });

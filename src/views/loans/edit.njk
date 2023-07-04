@@ -1,0 +1,47 @@
+{% extends "layout.njk" %}
+
+{% set title = "Editar Empréstimo" %}
+
+{% block content %}
+<h1 class="mt-5 text-center">
+  {{ title }}
+</h1>
+
+<div class="col-md-6 mx-auto mb-5">
+  <form id="formEditLoan" action="/loans/update/{{ loan.id }}" method="post">
+    <div class="mb-3">
+      <label for="loan-user">Usuário</label>
+      <select class="form-control" id="loan-user" name="userId" required>
+        {% for user in users %}
+          {% if user.id == loan.userId %}
+            <option value="{{ user.id }}" selected>{{ user.name }}</option>
+          {% else %}
+            <option value="{{ user.id }}">{{ user.name }}</option>
+          {% endif %}
+        {% endfor %}
+      </select>
+    </div>
+    <div class="mb-3">
+      <label for="loan-book">Livro</label>
+      <select class="form-control" id="loan-book" name="bookId" required>
+        {% for book in books %}
+          {% if book.id == loan.bookId %}
+            <option value="{{ book.id }}" selected>{{ book.title }}</option>
+          {% else %}
+            <option value="{{ book.id }}">{{ book.title }}</option>
+          {% endif %}
+        {% endfor %}
+      </select>
+    </div>
+    <div class="mb-3">
+      <label for="loan-date">Data do Empréstimo</label>
+      <input type="date" class="form-control" id="loan-date" name="loanDate" value="{{ loan.loanDate }}" required>
+    </div>
+    <div class="mb-3">
+      <label for="loan-return">Data de Devolução</label>
+      <input type="date" class="form-control" id="loan-return" name="returnDate" value="{{ loan.returnDate }}" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Atualizar Empréstimo</button>
+  </form>
+</div>
+{% endblock %}

@@ -5,23 +5,6 @@ const { celebrate, Joi, Segments } = require('celebrate');
 
 const usersAPIController = require('../controllers/userAPIController');
 
-/**
- * @swagger
- * /api/v1/users/signup:
- *   post:
- *     summary: Cadastra um novo usuário.
- *     tags:
- *       - users
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/NewUser'
- *     responses:
- *       201:
- *         description: Usuário cadastrado.
- */
 router.post(
   '/signup',
   celebrate({
@@ -34,32 +17,7 @@ router.post(
   usersAPIController.store
 );
 
-/**
- * @swagger
- * /api/v1/users/signin:
- *   post:
- *     summary: Autentica um usuário cadastrado.
- *     tags:
- *       - users
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/User'
- *     responses:
- *       200:
- *         description: Usuário autenticado.
- *         content:
- *           application/json:
- *             schema:
- *                $ref: '#/components/schemas/Token'
- *         headers:
- *           Authorization:
- *             schema:
- *               type: string
- *             description: Token JWT criado.
- */
+
 router.post(
   '/signin',
   celebrate({

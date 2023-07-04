@@ -1,0 +1,24 @@
+{% extends "layout.njk" %}
+
+{% set title = "Excluir Empréstimo" %}
+
+{% block content %}
+<h1 class="mt-5 text-center">
+  {{ title }}
+</h1>
+
+<div class="col-md-6 mx-auto mt-5">
+  <h4>Tem certeza de que deseja excluir o empréstimo?</h4>
+
+  <p><strong>ID:</strong> {{ loan.id }}</p>
+  <p><strong>Usuário:</strong> {{ loan.user.name }}</p>
+  <p><strong>Livro:</strong> {{ loan.book.title }}</p>
+  <p><strong>Data do Empréstimo:</strong> {{ loan.loanDate }}</p>
+  <p><strong>Data de Devolução:</strong> {{ loan.returnDate }}</p>
+
+  <form id="formDeleteLoan" action="/loans/delete/{{ loan.id }}" method="post">
+    <button type="submit" class="btn btn-danger">Excluir Empréstimo</button>
+    <a href="/loans" class="btn btn-secondary ml-2">Cancelar</a>
+  </form>
+</div>
+{% endblock %}

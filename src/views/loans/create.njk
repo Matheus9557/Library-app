@@ -1,0 +1,41 @@
+{% extends "layout.njk" %}
+
+{% set title = "Criar Empréstimo" %}
+
+{% block content %}
+<h1 class="mt-5 text-center">
+  {{ title }}
+</h1>
+
+<div class="col-md-6 mx-auto mb-5">
+  <form id="formCreateLoan" action="/loans/create" method="post">
+    <div class="mb-3">
+      <label for="loan-user">Usuário</label>
+      <select class="form-control" id="loan-user" name="userId" required>
+        <option value="">Selecione um usuário</option>
+        {% for user in users %}
+          <option value="{{ user.id }}">{{ user.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="mb-3">
+      <label for="loan-book">Livro</label>
+      <select class="form-control" id="loan-book" name="bookId" required>
+        <option value="">Selecione um livro</option>
+        {% for book in books %}
+          <option value="{{ book.id }}">{{ book.title }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="mb-3">
+      <label for="loan-date">Data do Empréstimo</label>
+      <input type="date" class="form-control" id="loan-date" name="loanDate" required>
+    </div>
+    <div class="mb-3">
+      <label for="loan-return">Data de Devolução</label>
+      <input type="date" class="form-control" id="loan-return" name="returnDate" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Criar Empréstimo</button>
+  </form>
+</div>
+{% endblock %}
