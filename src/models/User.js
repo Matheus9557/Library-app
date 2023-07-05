@@ -5,18 +5,18 @@ const dotenv = require('dotenv').config();
 const create = async (data) => {
   const sql = `
     INSERT INTO
-      users (id, name, email, password)
+      users (id, registration, category, name, phone, email, password, hasPenalty)
     VALUES
-      (?, ?, ?, ?)
+      (?, ?, ?, ?, ?, ?, ?, ?)
   `;
 
   const db = await conn();
 
-  const { id, name, email, password } = data;
+  const { id, registration, category, name, phone, email, password, hasPenalty } = data;
   const salt = parseInt(process.env.SALT, 10);
   const hash = await bcrypt.hash(password, salt);
 
-  const { lastID } = await db.run(sql, [id, name, email, hash]);
+  const { lastID } = await db.run(sql, [id, registration, category, name, phone, email, hash, hasPenalty]);
 
   return lastID;
 };
@@ -24,16 +24,16 @@ const create = async (data) => {
 const createAutoInc = async (data) => {
   const sql = `
     INSERT INTO
-      users (name, email, password)
+      users (registration, category, name, phone, email, password, hasPenalty)
     VALUES
-      (?, ?, ?)
+      (?, ?, ?, ?, ?, ?, ?)
   `;
 
   const db = await conn();
 
-  const { name, email, password } = data;
+  const { registration, category, name, phone, email, password, hasPenalty } = data;
 
-  const { lastID } = await db.run(sql, [name, email, password]);
+  const { lastID } = await db.run(sql, [registration, category, name, phone, email, password, hasPenalty]);
 
   return lastID;
 };

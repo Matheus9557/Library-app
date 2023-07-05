@@ -3,18 +3,17 @@
 {% set title = "Excluir" %}
 
 {% block content %}
-<h1 class="mt-5 text-center">
-  {{ title }}
-</h1>
+  <h1 class="mt-5 text-center">
+    {{ title }}
+  </h1>
 
-<div class="col-md-6 mx-auto mb-5">
-  <form id="formDeleteBook" action="/books/delete/{{ book.id }}" method="post">
-    <h2>Deseja realmente excluir o livro "{{ book.title }}"?</h2>
-    <div class="mb-3">
-      <input type="hidden" name="_method" value="DELETE">
-    </div>
-    <button type="submit" class="btn btn-primary" id="deleteBookBtn">Excluir</button>
-    <a href="/books" class="btn btn-danger">Cancelar</a>
-  </form>
-</div>
+  <div class="col-md-6 mx-auto mb-5">
+    <form id="formDeleteBook" action="/books/{{ book.id }}/delete" method="post">
+      <h2>Deseja realmente excluir o livro "{{ book.title }}"?</h2>
+      <div class="mb-3">
+        <button type="submit" class="btn btn-danger">Confirmar</button>
+        <a href="/books" class="btn btn-secondary">Cancelar</a>
+      </div>
+    </form>
+  </div>
 {% endblock %}

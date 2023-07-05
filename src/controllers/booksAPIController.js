@@ -20,31 +20,35 @@ const readById = async (req, res) => {
 };
 
 const create = async (req, res) => {
-  const bookId = await Book.createAutoInc(req.body);
+  const { title, author, isbn, category_id } = req.body;
+
+  const newBook = { title, author, isbn, category_id };
+
+  const bookId = await Book.createAutoInc(newBook);
 
   res.status(201).json({ bookId });
 };
 
 const update = async (req, res) => {
   const { id } = req.params;
+  const { title, author, isbn, category_id } = req.body;
 
-  const book = await Book.readByIdWithLoanId(id);
-  let updatedBook = {};
+  const book = await Book.readById(id);
 
-  if (book) {
-    for (let prop in book) {
-      updatedBook =
-        req.body[prop] && book[prop] !== req.body[prop]
-          ? { ...updatedBook, [prop]: req.body[prop] }
-          : { ...updatedBook, [prop]: book[prop] };
-    }
-
-    await Book.update(id, updatedBook);
-
-    return res.status(204).send();
+  if (!book) {
+    return res.status(404).json({ error: 'Book not found.' });
   }
 
-  res.status(404).json({ error: 'Book not found.' });
+  const updatedBook = {
+    title: title || book.title,
+    author: author || book.author,
+    isbn: isbn || book.isbn,
+    category_id: category_id || book.category_id,
+  };
+
+  await Book.update(id, updatedBook);
+
+  res.sendStatus(204);
 };
 
 const destroy = async (req, res) => {
@@ -52,13 +56,13 @@ const destroy = async (req, res) => {
 
   const book = await Book.readById(id);
 
-  if (book) {
-    await Book.destroy(id);
-
-    return res.status(204).send();
+  if (!book) {
+    return res.status(404).json({ error: 'Book not found.' });
   }
 
-  res.status(404).json({ error: 'Book not found.' });
+  await Book.destroy(id);
+
+  res.sendStatus(204);
 };
 
 module.exports = {

@@ -3,16 +3,16 @@ const { conn } = require('../db');
 async function create(data) {
   const sql = `
     INSERT INTO
-      books (id, title, author, year, isbn)
+      books (id, isbn, image, title, author, year)
     VALUES
       (?, ?, ?, ?, ?)
   `;
 
   const db = await conn();
 
-  const { id, title, author, year, isbn } = data;
+  const { id, isbn, image, title, author, year } = data;
 
-  const { lastID } = await db.run(sql, [id, title, author, year, isbn]);
+  const { lastID } = await db.run(sql, [id, isbn, image, title, author, year]);
 
   return lastID;
 }
@@ -20,16 +20,16 @@ async function create(data) {
 async function createAutoInc(data) {
   const sql = `
     INSERT INTO
-      books (title, author, year, isbn)
+      books (isbn, image, title, author, year)
     VALUES
-      (?, ?, ?, ?)
+      (?, ?, ?, ?, ?)
   `;
 
   const db = await conn();
 
-  const { title, author, year, isbn } = data;
+  const { isbn, image, title, author, year } = data;
 
-  const { lastID } = await db.run(sql, [title, author, year, isbn]);
+  const { lastID } = await db.run(sql, [isbn, image, title, author, year]);
 
   return lastID;
 }
@@ -37,7 +37,7 @@ async function createAutoInc(data) {
 async function readAll() {
   const sql = `
     SELECT
-      books.id, books.title, books.author, books.year, books.isbn
+      books.id, books.isbn, books.image, books.title, books.author, books.year
     FROM
       books
   `;
@@ -52,7 +52,7 @@ async function readAll() {
 async function readById(id) {
   const sql = `
     SELECT
-      books.id, books.title, books.author, books.year, books.isbn
+      books.id, books.isbn, books.image, books.title, books.author, books.year
     FROM
       books
     WHERE
@@ -71,16 +71,16 @@ async function update(id, data) {
     UPDATE
       books
     SET
-      title = ?, author = ?, year = ?, isbn = ?
+      isbn = ?, image = ?, title = ?, author = ?, year = ?
     WHERE
       id = ?
   `;
 
   const db = await conn();
 
-  const { title, author, year, isbn } = data;
+  const { isbn, image, title, author, year } = data;
 
-  const { changes } = await db.run(sql, [title, author, year, isbn, id]);
+  const { changes } = await db.run(sql, [isbn, image, title, author, year, id]);
 
   return changes;
 }

@@ -3,32 +3,39 @@
 {% set title = "Cadastrar" if mode === 'create' else "Editar" %}
 
 {% block content %}
-<h1 class="mt-5 text-center">
-  {{ title }}
-</h1>
+  <h1 class="mt-5 text-center">
+    {{ title }}
+  </h1>
 
-<div class="col-md-6 mx-auto mb-5">
-  <form id="formFood" action="{{ '/books' + (mode === 'create' ? '/create' : '/edit/' + book.id) }}" method="post" enctype="multipart/form-data">
-    <div class="mb-3">
-      <label for="book-title">Título</label>
-      <input type="text" class="form-control" id="book-title" name="title"
-             value="{{ book.title if book else '' }}" {% if mode === 'create' %}required{% endif %}>
-    </div>
-    <div class="mb-3">
-      <label for="book-author">Autor</label>
-      <input type="text" class="form-control" id="book-author" name="author"
-             value="{{ book.author if book else '' }}" {% if mode === 'create' %}required{% endif %}>
-    </div>
-    <div class="mb-3">
-      <label for="book-description">Descrição</label>
-      <textarea class="form-control" id="book-description" name="description" {% if mode === 'create' %}required{% endif %}>
-        {{ book.description if book else '' }}
-      </textarea>
-    </div>
-    <button type="submit" class="btn btn-primary">
-      {{ title }}
-    </button>
-    <a href="/books" class="btn btn-danger">Cancelar</a>
-  </form>
-</div>
+  <div class="col-md-6 mx-auto mb-5">
+    <form id="formBook" action="{{ mode === 'create' ? '/books/create' : '/books/edit/' + book.id }}" method="post" enctype="multipart/form-data">
+      {% if mode === 'edit' %}
+        <input type="hidden" name="_method" value="PUT">
+      {% endif %}
+      <div class="mb-3">
+        <label for="book-title">Título</label>
+        <input type="text" class="form-control" id="book-title" name="title" value="{{ book.title if book else '' }}" {% if mode === 'create' %}required{% endif %}>
+      </div>
+      <div class="mb-3">
+        <label for="book-author">Autor</label>
+        <input type="text" class="form-control" id="book-author" name="author" value="{{ book.author if book else '' }}" {% if mode === 'create' %}required{% endif %}>
+      </div>
+      <div class="mb-3">
+        <label for="book-description">Descrição</label>
+        <textarea class="form-control" id="book-description" name="description" {% if mode === 'create' %}required{% endif %}>
+          {{ book.description if book else '' }}
+        </textarea>
+      </div>
+      {% if mode === 'create' %}
+        <div class="mb-3">
+          <label for="book-image">Imagem</label>
+          <input type="file" class="form-control-file" id="book-image" name="image" accept="image/*" required>
+        </div>
+      {% endif %}
+      <button type="submit" class="btn btn-primary">
+        {{ title }}
+      </button>
+      <a href="/books" class="btn btn-danger">Cancelar</a>
+    </form>
+  </div>
 {% endblock %}

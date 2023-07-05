@@ -5,7 +5,7 @@ const parser = require('../config/parser');
 const middleware = require('../middleware');
 const booksController = require('../controllers/booksController');
 
-router.get('/index', booksController.index);
+router.get('/', middleware.isAuthenticated, booksController.index);
 
 router.get('/create', middleware.isAuthenticated, booksController.getCreateForm);
 
@@ -37,45 +37,43 @@ router.post(
   parser.single('image'),
   celebrate({
     [Segments.BODY]: Joi.object().keys({
-      ISBN: Joi.string().required(),
       title: Joi.string().required(),
       author: Joi.string().required(),
-      year: Joi.number().integer().required(),
-      loan_id: Joi.number().integer().required(),
+      isbn: Joi.string().required(),
+      category_id: Joi.number().integer().required(),
     }),
   }),
   booksController.create
 );
 
 router.post(
-  '/update',
+  '/update/:id',
   middleware.isAuthenticated,
   parser.single('image'),
   celebrate(
     {
+      [Segments.PARAMS]: {
+        id: Joi.number().integer().required(),
+      },
       [Segments.BODY]: Joi.object().keys({
-        id: Joi.string().required(),
-        ISBN: Joi.string().required(),
         title: Joi.string().required(),
         author: Joi.string().required(),
-        year: Joi.number().integer().required(),
-        loan_id: Joi.number().integer().required(),
+        isbn: Joi.string().required(),
+        category_id: Joi.number().integer().required(),
       }),
     },
-    {
-      allowUnknown: true,
-    }
+    { allowUnknown: true }
   ),
   booksController.update
 );
 
 router.post(
-  '/delete',
+  '/delete/:id',
   middleware.isAuthenticated,
   celebrate({
-    [Segments.BODY]: Joi.object().keys({
+    [Segments.PARAMS]: {
       id: Joi.number().integer().required(),
-    }),
+    },
   }),
   booksController.destroy
 );

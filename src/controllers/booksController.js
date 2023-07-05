@@ -6,7 +6,6 @@ const Loan = require('../models/Loans');
 
 const index = async (req, res) => {
   const books = await Book.readAll();
-
   const loans = await Loan.readAll();
 
   res.render('books/index.njk', { books, loans });
@@ -15,18 +14,17 @@ const index = async (req, res) => {
 const getCreateForm = async (req, res) => {
   const loans = await Loan.readAll();
 
-  res.locals.mode = 'create';
-  res.render('books/form.njk', { loans });
+  res.render('books/form.njk', { mode: 'create', loans });
 };
 
 const create = async (req, res) => {
-  const { ISBN, title, author, year, loan_id } = req.body;
+  const { title, author, isbn, category_id } = req.body;
 
-  const newBook = { ISBN, title, author, year, loan_id };
+  const newBook = { title, author, isbn, category_id };
 
   const bookId = await Book.createAutoInc(newBook);
 
-  res.redirect('/');
+  res.redirect('/books');
 };
 
 const getUpdateForm = async (req, res) => {
@@ -35,18 +33,33 @@ const getUpdateForm = async (req, res) => {
   const book = await Book.readById(id);
   const loans = await Loan.readAll();
 
-  res.locals.mode = 'update';
-  res.render('books/form.njk', { book, loans });
+  if (!book) {
+    return res.status(404).render('error.njk', { error: 'Book not found.' });
+  }
+
+  res.render('books/form.njk', { mode: 'update', book, loans });
 };
 
 const update = async (req, res) => {
-  const { id, ISBN, title, author, year, loan_id } = req.body;
+  const { id } = req.params;
+  const { title, author, isbn, category_id } = req.body;
 
-  const updateBook = { ISBN, title, author, year, loan_id };
+  const book = await Book.readById(id);
 
-  const result = await Book.update(id, updateBook);
+  if (!book) {
+    return res.status(404).render('error.njk', { error: 'Book not found.' });
+  }
 
-  res.redirect('/');
+  const updatedBook = {
+    title: title || book.title,
+    author: author || book.author,
+    isbn: isbn || book.isbn,
+    category_id: category_id || book.category_id,
+  };
+
+  await Book.update(id, updatedBook);
+
+  res.redirect('/books');
 };
 
 const getDeleteForm = async (req, res) => {
@@ -54,15 +67,25 @@ const getDeleteForm = async (req, res) => {
 
   const book = await Book.readById(id);
 
+  if (!book) {
+    return res.status(404).render('error.njk', { error: 'Book not found.' });
+  }
+
   res.render('books/delete.njk', { book });
 };
 
 const destroy = async (req, res) => {
   const { id } = req.body;
 
-  const deleteId = await Book.destroy(id);
+  const book = await Book.readById(id);
 
-  res.redirect('/');
+  if (!book) {
+    return res.status(404).render('error.njk', { error: 'Book not found.' });
+  }
+
+  await Book.destroy(id);
+
+  res.redirect('/books');
 };
 
 module.exports = {

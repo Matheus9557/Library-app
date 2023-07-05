@@ -1,11 +1,11 @@
 const { conn } = require('../db');
 
 async function create(data) {
-  const sql = 'INSERT INTO loans (loanDate, returnDate, userId, bookId) VALUES (?, ?, ?, ?)';
-  const { loanDate, returnDate, userId, bookId } = data;
+  const sql = 'INSERT INTO loans (id, loanDate, returnDate, userId, bookId) VALUES (?, ?, ?, ?)';
+  const { id, loanDate, returnDate, userId, bookId } = data;
 
   const db = await conn();
-  const { lastID } = await db.run(sql, [loanDate, returnDate, userId, bookId]);
+  const { lastID } = await db.run(sql, [id, loanDate, returnDate, userId, bookId]);
 
   return lastID;
 }
@@ -24,7 +24,7 @@ async function update(id, data) {
   const { loanDate, returnDate, userId, bookId } = data;
 
   const db = await conn();
-  await db.run(sql, [loanDate, returnDate, userId, bookId, id]);
+  await db.run(sql, [id, loanDate, returnDate, userId, bookId, id]);
 }
 
 async function remove(id) {
