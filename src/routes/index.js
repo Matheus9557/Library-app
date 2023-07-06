@@ -3,18 +3,24 @@ const router = express.Router();
 
 const { errors } = require('celebrate');
 const middleware = require('../middleware');
-const UserController = require('../controllers/userController');
-const UserAPIController = require('../controllers/userAPIController');
-const BookAPIController = require('../controllers/booksAPIController');
-const BookController = require('../controllers/booksController');
+
 const LoanController = require('../controllers/loanController');
 
-// Middleware de erros do Celebrate
+const booksRouter = require('./books');
+const booksAPIRouter = require('./booksAPi');
+const usersRouter = require('./user');
+const usersAPIRouter = require('./usersAPI');
+
+
+
 router.use(errors());
-
-// Middleware para inicializar variáveis locais
 router.use(middleware.initLocals);
+router.use(usersRouter);
+router.use('/books', booksRouter);
+router.use('/api/v1/books', booksAPIRouter);
+router.use('/api/v1/users', usersAPIRouter);
 
+/*
 // Rotas para autenticação de usuários
 router.post('/users/signup', UserAPIController.store);
 router.post('/users/signin', UserAPIController.authenticate);
@@ -48,6 +54,9 @@ router.put('/api/v1/loans/:id', middleware.isAPIAuthenticated, LoanController.up
 router.delete('/api/v1/loans/:id', middleware.isAPIAuthenticated, LoanController.deleteLoan);
 
 // Rota raiz redireciona para /foods/index
+*/
+
 router.get('/', (req, res) => res.redirect('/books/index'));
+router.get('/loans', LoanController.getAllLoans);
 
 module.exports = router;
