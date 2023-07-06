@@ -18,20 +18,20 @@ const { dbFile } = require('./db');
 
 const app = express();
 
-app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
+app.use(express.static('public'));
+app.use(logger('tiny'));
 app.use(cookieParser());
 app.use(flash());
-app.use(
   session({
     store: new SQLiteStore(),
-    secret: 'hjgutrOIYUIKJHFytgf43776GUuyguy7@#$&¨Gyg@#gf',
+    secret: process.env.SECRET_KEY,
     name: 'sessionId',
     resave: true,
     saveUninitialized: true,
     cookie: { maxAge: 7 * 24 * 60 * 60 * 1000 },
-  })
-);
+  });
 
 // Swagger configuration
 const swaggerOptions = {
