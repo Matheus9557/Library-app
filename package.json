@@ -26,6 +26,8 @@
     "nunjucks": "^3.2.4",
     "path": "^0.12.7",
     "sqlite-async": "^1.2.0",
-    "sqlite3": "^5.1.6"
+    "sqlite3": "^5.1.6",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^4.6.3"
   }
 }

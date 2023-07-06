@@ -1,15 +1,15 @@
 const fs = require('fs');
 const express = require('express');
-
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
-
 const nunjucks = require('nunjucks');
 const flash = require('connect-flash');
 const dotenv = require('dotenv').config();
 const SQLiteStore = require('connect-sqlite3')(session);
 const { isCelebrateError } = require('celebrate');
+const { serve, setup } = require('swagger-ui-express');
+const swaggerJsDoc = require('swagger-jsdoc');
 
 const routes = require('./routes');
 const Seed = require('./seeders');
@@ -33,6 +33,26 @@ app.use(
   })
 );
 
+// Swagger configuration
+const swaggerOptions = {
+  definition: {
+    openapi: '3.0.0',
+    info: {
+      title: 'Library App API',
+      version: '1.0.0',
+      description: 'API documentation for the Library App',
+    },
+    servers: [
+      {
+        url: 'http://localhost:3000',
+      },
+    ],
+  },
+  apis: ['./routes/*.js'],
+};
+
+const swaggerDocs = swaggerJsDoc(swaggerOptions);
+app.use('/api-docs', serve, setup(swaggerDocs));
 
 app.set('view engine', 'njk');
 
@@ -59,7 +79,10 @@ app.use((err, req, res, next) => {
   console.log(err);
 
   if (isCelebrateError(err)) {
-    const message = err.message + ': ' + Object.fromEntries(err.details).body.details[0].message;
+    const message =
+      err.message +
+      ': ' +
+      Object.fromEntries(err.details).body.details[0].message;
     if (!req.originalUrl.includes('api')) {
       // joi error comes from the web app, so redirect with a flash
       req.flash('error', message);
